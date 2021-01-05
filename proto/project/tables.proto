@@ -6,3 +6,6 @@ import "project/options.proto";
 import "project/events/enter.proto";
 import "project/aggregations/install.proto";
 import "project/aggregations/external_data.proto";
+
+option (analytics_schema.cluster_name) = 'cluster_name';
+option (analytics_schema.db_name) = 'db_name';

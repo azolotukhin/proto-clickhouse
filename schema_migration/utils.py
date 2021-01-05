@@ -1,4 +1,4 @@
-from proto_ww2_analytics import options_pb2
+from project import options_pb2
 from google.protobuf.descriptor import FieldDescriptor
 
 

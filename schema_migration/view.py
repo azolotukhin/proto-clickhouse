@@ -1,6 +1,6 @@
 from google.protobuf.descriptor import Descriptor
 
-from proto_ww2_analytics import options_pb2
+from project import options_pb2
 
 
 class View:

@@ -80,6 +80,6 @@ message EnterEventMaterializedViewMessage {
         NAME: "enter_event_consumer"
         MATERIALIZED: true
         TO: "EnterEvent"
-        AS_SELECT: "* FROM ww2.EnterEventKafka"
+        AS_SELECT: "* FROM db_name.EnterEventKafka"
     };
 }

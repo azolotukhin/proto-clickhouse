@@ -2,7 +2,7 @@ from typing import Optional, List
 
 from google.protobuf.descriptor import Descriptor
 
-from proto_ww2_analytics import options_pb2
+from project import options_pb2
 from schema_migration.clickhouse_engines import Distributed, MergeTree, ReplicatedMergeTree
 from schema_migration.clickhouse_engines.kafka import Kafka
 from schema_migration.clickhouse_engines.url import URL

@@ -94,3 +94,9 @@ message FieldMeta {
 extend google.protobuf.FieldOptions {
     FieldMeta field_meta = 10001;
 }
+
+
+extend google.protobuf.FileOptions {
+  string cluster_name = 51234;
+  string db_name = 51235;
+}
