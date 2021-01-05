@@ -1,0 +1,85 @@
+// Все входы в игру
+syntax = "proto3";
+
+package project.enter;
+
+import "project/options.proto";
+import "project/player_segments.proto";
+
+enum EnterEventAction {
+    action_none = 0;
+    player_enter = 1;
+}
+
+message EnterEvent {
+    option (analytics_schema.message_meta).table_meta = {
+        NAME: "Enter"
+        kafka_topic: "enter_event_topic"
+    };
+    option (analytics_schema.message_meta).table_meta.ReplicatedMergeTree = {
+        replica_name: "{nodename}"
+    };
+
+    string uuid = 1 [
+        (analytics_schema.field_meta) = {
+            clickhouse_data_type: "UUID"
+        }
+    ]; // unique event id
+    string date = 2 [
+        (analytics_schema.field_meta) = {
+            clickhouse_data_type: "Date"
+        }
+    ]; // date of event, used for PARTITION_BY
+    string datetime = 3 [
+        (analytics_schema.field_meta) = {
+            clickhouse_data_type: "DateTime"
+        }
+    ];  // datetime of event
+    string player_id = 4; // player id (primary key)
+    string client_ip = 5; // client remote api
+    string source_type = 6; // source of event (prod, dev)
+    PlayerSegments PS = 7; // player segments
+
+    EnterEventAction action = 1001; // String
+    int32 days_in_game = 1002; // Дней в игре
+    int32 is_first_enter = 1003; // Индикатор первого входа
+    string os_name = 1004; // androidOS, iOS, iPhone OS, Windows, ''
+    string os_version = 1005; // Версия операционной системы
+    int32 retention_day = 1006; // Ретеншн
+
+}
+
+
+message EnterEventKafkaMessage {
+    option (analytics_schema.message_meta).table_meta = {
+        NAME: "EnterEventKafka"
+        AS: "EnterEvent"
+    };
+    option (analytics_schema.message_meta).table_meta.Kafka = {
+        kafka_broker_list: "192.168.10.8:9092,192.168.10.9:9092,192.168.10.10:9092"
+        kafka_topic_list: "enter_event_topic"
+        kafka_group_name: "enter_event_group"
+        kafka_format: "JSONEachRow"
+    };
+}
+
+
+message EnterEventDistributedMessage {
+    option (analytics_schema.message_meta).table_meta = {
+        NAME: "d_EnterEvent"
+        AS: "EnterEvent"
+    };
+    option (analytics_schema.message_meta).table_meta.Distributed = {
+        table_name: "EnterEvent"
+        sharding_key: "sipHash64(player_id)"
+    };
+}
+
+message EnterEventMaterializedViewMessage {
+    option (analytics_schema.message_meta).view_meta = {
+        NAME: "enter_event_consumer"
+        MATERIALIZED: true
+        TO: "EnterEvent"
+        AS_SELECT: "* FROM ww2.EnterEventKafka"
+    };
+}

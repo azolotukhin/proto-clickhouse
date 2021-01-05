@@ -1,0 +1,96 @@
+syntax = "proto3";
+
+import "google/protobuf/descriptor.proto";
+
+package analytics_schema;
+
+
+message URL {
+    string URL = 1;
+    string Format = 2;
+}
+
+
+message MergeTree {
+    string PARTITION_BY = 1;
+    string ORDER_BY = 2;
+    string PRIMARY_KEY = 3;
+    string SAMPLE_BY = 4;
+}
+
+
+message ReplicatedMergeTree {
+    string PARTITION_BY = 1;
+    string ORDER_BY = 2;
+    string PRIMARY_KEY = 3;
+    string SAMPLE_BY = 4;
+    string zoo_path = 5;
+    string replica_name = 6;
+}
+
+
+message Kafka {
+    string kafka_broker_list = 1;
+    string kafka_topic_list = 2;
+    string kafka_group_name = 3;
+    string kafka_format = 4;
+    string kafka_row_delimiter = 5;
+    string kafka_schema = 6;
+    string kafka_num_consumers = 7;
+    string kafka_skip_broken_messages = 8;
+}
+
+
+message Distributed {
+    string table_name = 1;
+    string sharding_key = 2;
+}
+
+
+message TableMeta {
+    string NAME = 1001;
+    string AS = 1002;
+    oneof ENGINE  {
+        MergeTree MergeTree = 1003;
+        ReplicatedMergeTree ReplicatedMergeTree = 1004;
+        URL URL = 1005;
+        Kafka Kafka = 1006;
+        Distributed Distributed = 1007;
+    }
+
+    string kafka_topic = 2001;
+}
+
+
+message ViewMeta {
+    string NAME = 1001;
+    bool MATERIALIZED = 1002;
+    string AS_SELECT = 1003;
+    string TO = 1004;
+}
+
+
+message MessageMeta {
+    oneof Meta {
+        TableMeta table_meta = 10001;
+        ViewMeta view_meta = 10002;
+    }
+}
+
+
+extend google.protobuf.MessageOptions {
+    MessageMeta message_meta = 10001;
+}
+
+
+message FieldMeta {
+    string clickhouse_data_type = 1;
+    string DEFAULT = 2;
+    string MATERIALIZED = 3;
+    string ALIAS = 4;
+}
+
+
+extend google.protobuf.FieldOptions {
+    FieldMeta field_meta = 10001;
+}

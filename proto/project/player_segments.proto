@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package project;
+
+import "project/options.proto";
+
+message PlayerSegments {
+    int32 app_minor_version = 2; // Минорная версия приложения
+    string app_version = 3; // String, Версия приложения
+    string campaign = 4; // String, Рекламная кампания
+    string country = 6; // String, Страна игрока на момент записи строки в таблицу
+    string create_country = 7; // String, Страна игрока на момент инсталла
+    string create_datetime = 8 [
+        (analytics_schema.field_meta) = {
+            clickhouse_data_type: "DateTime"
+        }
+    ]; // DateTime, Время и дата инсталла
+    string create_env = 9; // String, Среда, в которой начата работа с приложением
+    string create_web_publisher = 10; // String, Так и не поняли необходимости в этом
+    string env = 12; // String, Среда, в которой работает игрок
+    bool is_debug = 17; // Int8 DEFAULT -1, Дебаг
+    string server_app_version = 23; // String, Версия приложения
+    int32 session_number = 24; // Int32 DEFAULT CAST(-1 AS Int32), Порядковый номер сессии игрока за всё время
+    float spent_usd = 25; // Float32 DEFAULT CAST(-1 AS Float32), Суммарное количество $, которое игрок внёс за всё своё время игры
+    string web_publisher = 26; // String, Название сайта, на котором размещена игра
+    string create_build_name = 27; // String, Дополнение к столбцу PS_env
+    string update_build_name = 28; // String, Дополнение к столбцу PS_env
+    string region = 29; // Регион
+    string device_type = 30; // Тип устройства
+    string create_bundle_id = 31;
+    string bundle_id = 32;
+    uint32 level = 33; // Уровень игрока
+    uint32 hq_level = 34; // Уровень штаба игрока
+    uint32 gold = 35; // Количество золота
+    uint32 spent_gold = 36; // Количество потраченного золота
+    uint32 purchase_count = 37; // Количество платежей
+    float max_payment = 38; // Максимальный платеж
+    string latest_payment = 39 [
+        (analytics_schema.field_meta) = {
+            clickhouse_data_type: "DateTime"
+        }
+    ]; // Дата последнего платежа
+    string ad_company_name = 40;
+    string media_source = 41;
+    string af_channel = 42;
+    string fb_adset_name= 43;
+    string update_datetime = 44 [
+        (analytics_schema.field_meta) = {
+            clickhouse_data_type: "DateTime"
+        }
+    ]; // Дата последнего платежа
+    uint32 active_day = 45; // Порядковый номер игрового дня игрока
+}

@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package project.aggregations.external_data;
+
+import "project/options.proto";
+import "project/player_segments.proto";
+
+message ExternalData {
+    option (analytics_schema.message_meta).table_meta = {
+        NAME: "ExternalData"
+    };
+    option (analytics_schema.message_meta).table_meta.URL = {
+        URL: "http://example.com/clickhouse_data"
+        Format: "JSONEachRow"
+    };
+
+    string id = 1;
+    string title = 2;
+}
+

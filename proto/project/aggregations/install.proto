@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package project.aggregations.install;
+
+import "project/options.proto";
+import "project/player_segments.proto";
+
+message InstallImport {
+    option (analytics_schema.message_meta).table_meta = {
+        NAME: "Install"
+    };
+    option (analytics_schema.message_meta).table_meta.ReplicatedMergeTree = {
+        replica_name: "{nodename}"
+        ORDER_BY: "date, player_id, sipHash64(player_id)"
+    };
+
+    string uuid = 1 [
+        (analytics_schema.field_meta) = {
+            clickhouse_data_type: "UUID"
+        }
+    ]; // unique event id
+    string date = 2 [
+        (analytics_schema.field_meta) = {
+            clickhouse_data_type: "Date"
+        }
+    ]; // date of event, used for PARTITION_BY
+    string datetime = 3 [
+        (analytics_schema.field_meta) = {
+            clickhouse_data_type: "DateTime"
+        }
+    ];  // datetime of event
+    string player_id = 4; // player id (primary key)
+    string client_ip = 5; // client remote api
+    string source_type = 6; // source of event (prod, dev)
+    PlayerSegments PS = 7; // player segments
+
+    string advertising_id = 1001;
+    string appsflyer_id = 1002;
+    string category = 1003; // used for find event class; DEFAULT	'PlayerProfile'
+    string create_app_minor_version = 1004;
+    string create_app_version = 1005;
+    string create_country = 1006;
+    string create_datetime = 1007 [
+        (analytics_schema.field_meta) = {
+            clickhouse_data_type: "DateTime"
+        }
+    ];  // datetime of event
+    string create_env = 1008;
+    string create_env_web_publisher = 1009;
+
+    string create_web_publisher = 1010;
+    string device_id = 1011;
+
+    string update_country = 1012;
+    string update_datetime = 1013; // datetime
+    string update_env = 1014;
+    string update_web_publisher = 1015;
+    int32 version = 1016; // Int32 DEFAULT CAST(-1 AS Int32)
+}
+
+
+message InstallDistributedMessage {
+    option (analytics_schema.message_meta).table_meta = {
+        NAME: "d_Install"
+        AS: "Install"
+    };
+    option (analytics_schema.message_meta).table_meta.Distributed = {
+        table_name: "Install"
+        sharding_key: "sipHash64(player_id)"
+    };
+}
+

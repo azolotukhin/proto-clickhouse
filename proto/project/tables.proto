@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package project;
+
+import "project/options.proto";
+import "project/events/enter.proto";
+import "project/aggregations/install.proto";
+import "project/aggregations/external_data.proto";
