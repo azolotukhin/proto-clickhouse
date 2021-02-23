@@ -17,9 +17,12 @@ def cli():
 
 
 @cli.command('create_tables')
-def create_tables():
+@click.option('-p', '--package')
+def create_tables(package):
     sym_db = Default()
     for message_type in sym_db._classes:
+        if package and package not in message_type.file.package:
+            continue
         message_meta = message_type.GetOptions().Extensions[options_pb2.message_meta]
         meta_object = message_meta.WhichOneof('Meta')
         if meta_object == 'table_meta':
